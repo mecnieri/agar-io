@@ -4,8 +4,8 @@ let Application = PIXI.Application,
 
 //Create a Pixi Application
 let app = new Application({
-  width: 2960,
-  height: 1440,
+  width: window.innerWidth,
+  height: window.innerHeight,
   antialias: true,
   transparent: false,
   resolution: 1
