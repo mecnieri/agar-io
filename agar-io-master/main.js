@@ -16,7 +16,6 @@ function setup() {
   let angle = null;
   let dx;
   let dy;
-  const arr = app.stage.children;
   let counter = 0;
   let text = new PIXI.Text(`You have eaten 0 apples`, {
     fontFamily: "Arial",
@@ -27,8 +26,12 @@ function setup() {
 
   //#endregion
   //#region background
-  app.stage.addChild(bg);
+  let bgContainer = new PIXI.Container();
+  bgContainer.addChild(bg);
   app.stage.addChild(text);
+  app.stage.addChild(bgContainer);
+
+  const arr = app.stage.children[1].children;
   text.x = 30;
   text.y = 30;
 
@@ -38,14 +41,17 @@ function setup() {
 
   let r = new Circle(111312, window.innerWidth / 2, window.innerHeight / 2);
   let c = r.draw();
-  app.stage.addChild(c);
+
+  let mainContainer = new PIXI.Container();
+  mainContainer.addChild(c);
+  app.stage.addChild(mainContainer);
 
   //#endregion
 
   //#region create other balls
 
-  for (let i = 0; i < 30; i++) {
-    app.stage.addChild(new Circle().draw());
+  for (let i = 0; i < 200; i++) {
+    bgContainer.addChild(new Circle().draw());
   }
   //#endregion
 
@@ -54,9 +60,10 @@ function setup() {
   const getMousePosition = () => app.renderer.plugins.interaction.mouse.global;
   const move = () => {
     mousePosition = getMousePosition();
+ 
     // difference between window center and mouse
-    dx = mousePosition.x - window.innerWidth / 2;
-    dy = mousePosition.y - window.innerHeight / 2;
+    dx = mousePosition.x - c.x - app.stage.x;
+    dy = mousePosition.y - c.y - app.stage.y;
 
     // angle depending on differences
     angle = Math.atan2(dy, dx);
@@ -64,11 +71,11 @@ function setup() {
     // vectors depending on angle
     xv = Math.cos(angle) * speed;
     yv = Math.sin(angle) * speed;
-
     //#region border logic
+
     if (
-      (app.stage.x > 0 && xv < 0) ||
-      (app.stage.x - window.innerWidth < -app.stage.width && xv > 0)
+      (bgContainer.x > 0 && xv < 0) ||
+      (bgContainer.x + bgContainer.width - window.innerWidth < 0 && xv > 0)
     ) {
       xv = 0;
     } else {
@@ -76,8 +83,8 @@ function setup() {
     }
 
     if (
-      (app.stage.y > 0 && yv < 0) ||
-      (app.stage.y - window.innerHeight < -app.stage.height && yv > 0)
+      (bgContainer.y > 0 && yv < 0) ||
+      (bgContainer.y + bgContainer.height - window.innerHeight < 0 && yv > 0)
     ) {
       yv = 0;
     } else {
@@ -85,32 +92,36 @@ function setup() {
     }
     //#endregion
 
-    // move main ball by vector
-    c.x += xv;
-    c.y += yv;
-    text.x += xv;
-    text.y += yv;
-
     // move container by oposite vector
-    app.stage.position.x -= xv;
-    app.stage.position.y -= yv;
+    bgContainer.position.x -= xv;
+    bgContainer.position.y -= yv;
   };
   //#endregion
+
+  //#region resize event
+  window.addEventListener("resize", () => {
+    app.view.width = window.innerWidth;
+    app.view.height = window.innerHeight;
+    r.grow(window.innerWidth / 2, window.innerHeight / 2, r.radius);
+  });
+  //#endregion
+
   app.ticker.add(() => {
     move();
 
     //#region eating
 
-    for (let i = 3; i < arr.length; i++) {
+    for (let i = 1; i < arr.length; i++) {
+      // console.log(arr[1].x)
       if (
-        Math.abs(c.x - arr[i].x) < r.radius &&
-        Math.abs(c.y - arr[i].y) < r.radius
+        Math.abs(c.x - arr[i].x - bgContainer.position.x) < r.radius &&
+        Math.abs(c.y - arr[i].y - bgContainer.position.y) < r.radius
       ) {
-        r.radius = arr[i].radius + r.radius;
+        r.radius = arr[i].radius / 10 + r.radius;
         r.grow(c.x, c.y, r.radius);
-        app.stage.removeChild(arr[i]);
-        app.stage.addChild(new Circle().draw());
-        speed *= 0.96;
+        bgContainer.removeChild(arr[i]);
+        bgContainer.addChild(new Circle().draw());
+        speed *= 0.9968;
         counter++;
         globalSpeed = speed;
 
@@ -122,7 +133,7 @@ function setup() {
         app.stage.removeChild(text);
 
         // create new text.
-        text = new PIXI.Text(`You have eaten ${counter} apples`, {
+        text = new PIXI.Text(`You have eaten ${counter} Skittles`, {
           fontFamily: "Arial",
           fontSize: 24,
           fill: 0xff1010,
@@ -146,6 +157,4 @@ function setup() {
     }
     //#endregion
   });
-
-  
 }

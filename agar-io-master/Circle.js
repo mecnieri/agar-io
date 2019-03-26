@@ -5,8 +5,10 @@ const colors = ["112F41", "0894A1", "47AB6C", "F2B134", "ED553B"];
 class Circle {
   constructor(
     color = parseInt(colors[Math.floor(Math.random() * 5)].substring(0), 16),
-    x = window.innerWidth / 2 + Math.random() * (app.stage.width - window.innerWidth),
-    y = window.innerHeight / 2 + Math.random() * (app.stage.height - window.innerHeight),
+    x = app.view.width / 2 +
+      Math.random() * (app.stage.width - window.innerWidth),
+    y = app.view.height / 2 +
+      Math.random() * (app.stage.height - window.innerHeight),
     radius = 10
   ) {
     this.c = new Graphics();

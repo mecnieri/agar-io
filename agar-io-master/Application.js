@@ -1,3 +1,5 @@
+// import moveC from "./main.js";
+
 //Aliases
 let Application = PIXI.Application,
   loader = PIXI.Loader.shared;
@@ -11,9 +13,9 @@ let app = new Application({
   resolution: 1
 });
 
-
 //Add the canvas that Pixi automatically created for you to the HTML document
 document.body.appendChild(app.view);
+
 
 
 export { app, loader };
