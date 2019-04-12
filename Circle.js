@@ -1,4 +1,4 @@
-import { app } from "../Application.js/index.js";
+import { app } from "../Application.js";
 
 let Graphics = PIXI.Graphics;
 const colors = ["5D2B7D", "A72D89", "1474BB", "8FC33E", "FEEE22", "E41E26"];
