@@ -1,5 +1,5 @@
-import Circle from "./Circle.js";
-import { app, loader } from "./Application.js";
+import Circle from "../Circle.js/index.js";
+import { app, loader } from "../Application.js/index.js";
 import bg from "./background.js";
 
 //load an image and run the `setup` function when it's done
@@ -60,7 +60,7 @@ function setup() {
   const getMousePosition = () => app.renderer.plugins.interaction.mouse.global;
   const move = () => {
     mousePosition = getMousePosition();
- 
+
     // difference between window center and mouse
     dx = mousePosition.x - c.x - app.stage.x;
     dy = mousePosition.y - c.y - app.stage.y;
@@ -112,7 +112,8 @@ function setup() {
     //#region eating
 
     for (let i = 1; i < arr.length; i++) {
-      // console.log(arr[1].x)
+      
+
       if (
         Math.abs(c.x - arr[i].x - bgContainer.position.x) < r.radius &&
         Math.abs(c.y - arr[i].y - bgContainer.position.y) < r.radius
