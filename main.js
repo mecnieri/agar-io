@@ -1,5 +1,5 @@
-import Circle from "../Circle.js/index.js";
-import { app, loader } from "../Application.js/index.js";
+import Circle from "./Circle.js";
+import { app, loader } from "./Application.js";
 import bg from "./background.js";
 
 //load an image and run the `setup` function when it's done
